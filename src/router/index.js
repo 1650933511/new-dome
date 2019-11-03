@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../components/login'
-import Home from '../components/home'
+import Login from '../components/Login'
+import Home from '../components/Home'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -9,7 +9,15 @@ const router = new VueRouter({
     { path: '/', redirect: '/login' },
     { path: '/login', component: Login },
     { path: '/home', component: Home }
-
   ]
 })
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('key')
+  if (to.path === '/login' || token) {
+    next()
+  } else {
+    next('/login')
+  }
+})
+
 export default router
