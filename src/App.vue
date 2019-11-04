@@ -13,7 +13,8 @@
 }
 html,
 body,
-#app {
+#app,
+.app {
   height: 100%;
 }
 </style>

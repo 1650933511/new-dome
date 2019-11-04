@@ -40,6 +40,11 @@ export default {
   methods: {
     fn () {
       this.$refs.form.resetFields()
+      this.$notify({
+        title: '温馨提示',
+        message: '注销成功！么么哒▽',
+        duration: 1500
+      })
     },
     onSubmit () {
       this.$refs.form.validate(valid => {
@@ -59,10 +64,10 @@ export default {
                 type: 'warning'
               })
             } else {
-              this.$message({
-                showClose: true,
+              this.$notify({
+                title: '温馨提示',
                 message: res.data.meta.msg,
-                type: 'warning'
+                duration: 1000
               })
             }
           })
