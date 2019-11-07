@@ -10,7 +10,7 @@
     <el-menu
       router
       unique-opened
-      default-active= '$route.path.slice(1)'
+      :default-active= '$route.path.slice(1)'
       class="el-menu-vertical-demo"
       background-color="#545c64"
       text-color="#fff"
@@ -34,7 +34,6 @@
 </el-container>
 </template>
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -42,39 +41,37 @@ export default {
     }
   },
   methods: {
-    logout () {
-      this.$confirm('你确定要退出吗', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+    async logout () {
+      try {
+        await this.$confirm('你确定要退出吗', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
         localStorage.removeItem('key')
         this.$router.push('/login')
         this.$message({
           type: 'success',
           message: '退出成功!'
         })
-      }).catch(() => {
+      } catch (error) {
         this.$message({
           type: 'success',
           message: '伦家爱你呦'
         })
-      })
+      }
     }
   },
-  created () {
-    axios({
+  async created () {
+    const res = await this.$axios({
       method: 'get',
       url: 'http://localhost:8888/api/private/v1/menus',
       headers: { Authorization: localStorage.getItem('key') }
-    }).then(res => {
-      console.log(res.data)
-      const { data, meta } = res.data
-      // this.menuList=res.data.
-      if (meta.status === 200) {
-        this.menuList = data
-      }
     })
+    const { data, meta } = res.data
+    if (meta.status === 200) {
+      this.menuList = data
+    }
   }
 }
 </script>

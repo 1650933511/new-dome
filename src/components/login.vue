@@ -16,7 +16,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -47,32 +46,28 @@ export default {
       })
     },
     onSubmit () {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate(async valid => {
         if (valid) {
-          axios({
+          const res = await this.$axios({
             method: 'post',
             url: `http://localhost:8888/api/private/v1/login`,
             data: this.form
-          }).then(res => {
-            console.log(res.data)
-            if (res.data.meta.status === 200) {
-              localStorage.setItem('key', res.data.data.token)
-              this.$router.push('/home')
-              this.$message({
-                showClose: true,
-                message: res.data.meta.msg,
-                type: 'warning'
-              })
-            } else {
-              this.$notify({
-                title: '温馨提示',
-                message: res.data.meta.msg,
-                duration: 1000
-              })
-            }
           })
-        } else {
-          console.log('验证失败')
+          if (res.data.meta.status === 200) {
+            localStorage.setItem('key', res.data.data.token)
+            this.$router.push('/home')
+            this.$message({
+              showClose: true,
+              message: res.data.meta.msg,
+              type: 'warning'
+            })
+          } else {
+            this.$notify({
+              title: '温馨提示',
+              message: res.data.meta.msg,
+              duration: 1000
+            })
+          }
         }
       })
     }
